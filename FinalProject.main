@@ -1,5 +1,18 @@
 
-   public static void main(String[] args) {
+ package javafinal;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author 24jgu
+ */
+public class JavaFinal {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
         // TODO 
         // 
         
@@ -16,3 +29,5 @@
         
         
     }
+    
+}
