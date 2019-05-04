@@ -1,0 +1,545 @@
+/*
+002
+ *@author  William_Wilson
+003
+ *@version 1.6
+004
+ *Created: May 8, 2007
+005
+ */
+006
+ 
+007
+/*
+008
+ *import list
+009
+ */
+010
+import java.io.File;
+011
+ 
+012
+import java.awt.Point;
+013
+import java.awt.Graphics2D;
+014
+import java.awt.image.BufferedImage;
+015
+import java.awt.image.WritableRaster;
+016
+import java.awt.image.DataBufferByte;
+017
+ 
+018
+import javax.imageio.ImageIO;
+019
+import javax.swing.JOptionPane;
+020
+ 
+021
+/*
+022
+ *Class Steganography
+023
+ */
+024
+public class Steganography
+025
+{
+026
+     
+027
+    /*
+028
+     *Steganography Empty Constructor
+029
+     */
+030
+    public Steganography()
+031
+    {
+032
+    }
+033
+     
+034
+    /*
+035
+     *Encrypt an image with text, the output file will be of type .png
+036
+     *@param path        The path (folder) containing the image to modify
+037
+     *@param original   The name of the image to modify
+038
+     *@param ext1         The extension type of the image to modify (jpg, png)
+039
+     *@param stegan   The output name of the file
+040
+     *@param message  The text to hide in the image
+041
+     *@param type     integer representing either basic or advanced encoding
+042
+     */
+043
+    public boolean encode(String path, String original, String ext1, String stegan, String message)
+044
+    {
+045
+        String          file_name   = image_path(path,original,ext1);
+046
+        BufferedImage   image_orig  = getImage(file_name);
+047
+         
+048
+        //user space is not necessary for Encrypting
+049
+        BufferedImage image = user_space(image_orig);
+050
+        image = add_text(image,message);
+051
+         
+052
+        return(setImage(image,new File(image_path(path,stegan,"png")),"png"));
+053
+    }
+054
+     
+055
+    /*
+056
+     *Decrypt assumes the image being used is of type .png, extracts the hidden text from an image
+057
+     *@param path   The path (folder) containing the image to extract the message from
+058
+     *@param name The name of the image to extract the message from
+059
+     *@param type integer representing either basic or advanced encoding
+060
+     */
+061
+    public String decode(String path, String name)
+062
+    {
+063
+        byte[] decode;
+064
+        try
+065
+        {
+066
+            //user space is necessary for decrypting
+067
+            BufferedImage image  = user_space(getImage(image_path(path,name,"png")));
+068
+            decode = decode_text(get_byte_data(image));
+069
+            return(new String(decode));
+070
+        }
+071
+        catch(Exception e)
+072
+        {
+073
+            JOptionPane.showMessageDialog(null,
+074
+                "There is no hidden message in this image!","Error",
+075
+                JOptionPane.ERROR_MESSAGE);
+076
+            return "";
+077
+        }
+078
+    }
+079
+     
+080
+    /*
+081
+     *Returns the complete path of a file, in the form: path\name.ext
+082
+     *@param path   The path (folder) of the file
+083
+     *@param name The name of the file
+084
+     *@param ext      The extension of the file
+085
+     *@return A String representing the complete path of a file
+086
+     */
+087
+    private String image_path(String path, String name, String ext)
+088
+    {
+089
+        return path + "/" + name + "." + ext;
+090
+    }
+091
+     
+092
+    /*
+093
+     *Get method to return an image file
+094
+     *@param f The complete path name of the image.
+095
+     *@return A BufferedImage of the supplied file path
+096
+     *@see  Steganography.image_path
+097
+     */
+098
+    private BufferedImage getImage(String f)
+099
+    {
+100
+        BufferedImage   image   = null;
+101
+        File        file    = new File(f);
+102
+         
+103
+        try
+104
+        {
+105
+            image = ImageIO.read(file);
+106
+        }
+107
+        catch(Exception ex)
+108
+        {
+109
+            JOptionPane.showMessageDialog(null,
+110
+                "Image could not be read!","Error",JOptionPane.ERROR_MESSAGE);
+111
+        }
+112
+        return image;
+113
+    }
+114
+     
+115
+    /*
+116
+     *Set method to save an image file
+117
+     *@param image The image file to save
+118
+     *@param file     File  to save the image to
+119
+     *@param ext      The extension and thus format of the file to be saved
+120
+     *@return Returns true if the save is succesful
+121
+     */
+122
+    private boolean setImage(BufferedImage image, File file, String ext)
+123
+    {
+124
+        try
+125
+        {
+126
+            file.delete(); //delete resources used by the File
+127
+            ImageIO.write(image,ext,file);
+128
+            return true;
+129
+        }
+130
+        catch(Exception e)
+131
+        {
+132
+            JOptionPane.showMessageDialog(null,
+133
+                "File could not be saved!","Error",JOptionPane.ERROR_MESSAGE);
+134
+            return false;
+135
+        }
+136
+    }
+137
+     
+138
+    /*
+139
+     *Handles the addition of text into an image
+140
+     *@param image The image to add hidden text to
+141
+     *@param text    The text to hide in the image
+142
+     *@return Returns the image with the text embedded in it
+143
+     */
+144
+    private BufferedImage add_text(BufferedImage image, String text)
+145
+    {
+146
+        //convert all items to byte arrays: image, message, message length
+147
+        byte img[]  = get_byte_data(image);
+148
+        byte msg[] = text.getBytes();
+149
+        byte len[]   = bit_conversion(msg.length);
+150
+        try
+151
+        {
+152
+            encode_text(img, len,  0); //0 first positiong
+153
+            encode_text(img, msg, 32); //4 bytes of space for length: 4bytes*8bit = 32 bits
+154
+        }
+155
+        catch(Exception e)
+156
+        {
+157
+            JOptionPane.showMessageDialog(null,
+158
+"Target File cannot hold message!", "Error",JOptionPane.ERROR_MESSAGE);
+159
+        }
+160
+        return image;
+161
+    }
+162
+     
+163
+    /*
+164
+     *Creates a user space version of a Buffered Image, for editing and saving bytes
+165
+     *@param image The image to put into user space, removes compression interferences
+166
+     *@return The user space version of the supplied image
+167
+     */
+168
+    private BufferedImage user_space(BufferedImage image)
+169
+    {
+170
+        //create new_img with the attributes of image
+171
+        BufferedImage new_img  = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+172
+        Graphics2D  graphics = new_img.createGraphics();
+173
+        graphics.drawRenderedImage(image, null);
+174
+        graphics.dispose(); //release all allocated memory for this image
+175
+        return new_img;
+176
+    }
+177
+     
+178
+    /*
+179
+     *Gets the byte array of an image
+180
+     *@param image The image to get byte data from
+181
+     *@return Returns the byte array of the image supplied
+182
+     *@see Raster
+183
+     *@see WritableRaster
+184
+     *@see DataBufferByte
+185
+     */
+186
+    private byte[] get_byte_data(BufferedImage image)
+187
+    {
+188
+        WritableRaster raster   = image.getRaster();
+189
+        DataBufferByte buffer = (DataBufferByte)raster.getDataBuffer();
+190
+        return buffer.getData();
+191
+    }
+192
+     
+193
+    /*
+194
+     *Gernerates proper byte format of an integer
+195
+     *@param i The integer to convert
+196
+     *@return Returns a byte[4] array converting the supplied integer into bytes
+197
+     */
+198
+    private byte[] bit_conversion(int i)
+199
+    {
+200
+        //originally integers (ints) cast into bytes
+201
+        //byte byte7 = (byte)((i & 0xFF00000000000000L) >>> 56);
+202
+        //byte byte6 = (byte)((i & 0x00FF000000000000L) >>> 48);
+203
+        //byte byte5 = (byte)((i & 0x0000FF0000000000L) >>> 40);
+204
+        //byte byte4 = (byte)((i & 0x000000FF00000000L) >>> 32);
+205
+         
+206
+        //only using 4 bytes
+207
+        byte byte3 = (byte)((i & 0xFF000000) >>> 24); //0
+208
+        byte byte2 = (byte)((i & 0x00FF0000) >>> 16); //0
+209
+        byte byte1 = (byte)((i & 0x0000FF00) >>> 8 ); //0
+210
+        byte byte0 = (byte)((i & 0x000000FF)       );
+211
+        //{0,0,0,byte0} is equivalent, since all shifts >=8 will be 0
+212
+        return(new byte[]{byte3,byte2,byte1,byte0});
+213
+    }
+214
+     
+215
+    /*
+216
+     *Encode an array of bytes into another array of bytes at a supplied offset
+217
+     *@param image   Array of data representing an image
+218
+     *@param addition Array of data to add to the supplied image data array
+219
+     *@param offset   The offset into the image array to add the addition data
+220
+     *@return Returns data Array of merged image and addition data
+221
+     */
+222
+    private byte[] encode_text(byte[] image, byte[] addition, int offset)
+223
+    {
+224
+        //check that the data + offset will fit in the image
+225
+        if(addition.length + offset > image.length)
+226
+        {
+227
+            throw new IllegalArgumentException("File not long enough!");
+228
+        }
+229
+        //loop through each addition byte
+230
+        for(int i=0; i<addition.length; ++i)
+231
+        {
+232
+            //loop through the 8 bits of each byte
+233
+            int add = addition[i];
+234
+            for(int bit=7; bit>=0; --bit, ++offset) //ensure the new offset value carries on through both loops
+235
+            {
+236
+                //assign an integer to b, shifted by bit spaces AND 1
+237
+                //a single bit of the current byte
+238
+                int b = (add >>> bit) & 1;
+239
+                //assign the bit by taking: [(previous byte value) AND 0xfe] OR bit to add
+240
+                //changes the last bit of the byte in the image to be the bit of addition
+241
+                image[offset] = (byte)((image[offset] & 0xFE) | b );
+242
+            }
+243
+        }
+244
+        return image;
+245
+    }
+246
+     
+247
+    /*
+248
+     *Retrieves hidden text from an image
+249
+     *@param image Array of data, representing an image
+250
+     *@return Array of data which contains the hidden text
+251
+     */
+252
+    private byte[] decode_text(byte[] image)
+253
+    {
+254
+        int length = 0;
+255
+        int offset  = 32;
+256
+        //loop through 32 bytes of data to determine text length
+257
+        for(int i=0; i<32; ++i) //i=24 will also work, as only the 4th byte contains real data
+258
+        {
+259
+            length = (length << 1) | (image[i] & 1);
+260
+        }
+261
+         
+262
+        byte[] result = new byte[length];
+263
+         
+264
+        //loop through each byte of text
+265
+        for(int b=0; b<result.length; ++b )
+266
+        {
+267
+            //loop through each bit within a byte of text
+268
+            for(int i=0; i<8; ++i, ++offset)
+269
+            {
+270
+                //assign bit: [(new byte value) << 1] OR [(text byte) AND 1]
+271
+                result[b] = (byte)((result[b] << 1) | (image[offset] & 1));
+272
+            }
+273
+        }
