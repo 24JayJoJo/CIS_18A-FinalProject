@@ -1,1 +1,18 @@
 
+   public static void main(String[] args) {
+        // TODO 
+        // 
+        
+        System.out.println("Welcome to Aircraft Simulator! ");
+        System.out.println("======================================");
+        System.out.println("Please select an option:");
+        System.out.println("1. Create new aircraft");
+        System.out.println("2. Launch Aircrafts");
+        System.out.println("3. Land Aircrafts");
+        System.out.println("4. Have Aircrafts do tricks");
+        System.out.println("5. List Aircrafts on the ground");
+        System.out.println("6. List Aircrafts in the air");
+        System.out.println("7. Exit");
+        
+        
+    }
