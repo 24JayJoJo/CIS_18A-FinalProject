@@ -8,13 +8,13 @@ import java.util.Comparator;
 
 
 
-public class Hand {public class Hand
-{
+public class Hand{
+
     private static Card[] cards;
     private Deck deck;
     private int suits[];    // holds the number of each suit in a hand
     private int values[];    // holds the number of each type card (A,2,3,4,...,K)
-
+}
     public Hand()
     {
         cards = new Card[5];
