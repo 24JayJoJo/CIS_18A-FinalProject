@@ -85,6 +85,7 @@ public class Poker {
         System.exit(0);
     }
     
+    //Methods used in main
     public static void menu()
     {
         System.out.println("Welcome to Digital Poker!");
@@ -337,13 +338,12 @@ public class Poker {
         else
         {
             System.out.println("Digital Poker Rules.");
-            System.out.println("You are Hand 1 and playing poker against Hand 2.");
-            System.out.println("You start off with $500 and bet the amount you want, but BE CAREFULL!");
-            System.out.println("The cash can be gone before you know it and you will be a broke loser on the streets of Vegas.");
-            System.out.println("And if you reach 0 dollars then you won't be able to save the game!");
-            System.out.println("Why would you wanna save $0. Its only a reminder that your a loser!");
-            System.out.println("If your hand wins, you keep the money you bet plus 50% of the bet money added on to it.");
-            System.out.println("If you lose, you will just lose the money that you bet. As simple as That!");
+            System.out.println("It's your hand against the opponent's hand.");
+            System.out.println("You start with $500 and can bet any amount you'd like.");
+            System.out.println("If you reach $0 then it's game over!....Loser");
+            System.out.println("If your hand wins, payout is double your bet.");
+            System.out.println("If you lose, you will lose the money that you bet.");
+            System.out.println("If you tie with your opponent, you neither win nor lose money.");
         }
     }
 }
