@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package poker;
 
 import java.io.File;
@@ -157,15 +162,49 @@ public class Poker {
                             ca -= bet;
                             lo++;
                         }
+                        //Tie
                         else
                         {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("No one wins.");
+                            System.out.println("No one wins what.");
+                            if(hand1.getRank() == hand2.getRank())
+                            {
+                                int u,m;
+                                u = Integer.parseInt(hand1.getIntValue());
+                                m = Integer.parseInt(hand2.getIntValue());
+                                
+                                if(u > m)
+                                {
+                                        System.out.println("Your hand: " + hand1);
+                                        System.out.print("You have a ");
+                                        hand1.displayRank(hand1.getRank());
+                                        System.out.println("Opponents hand: " + hand2);
+                                        System.out.print("Opponent has a ");
+                                        hand2.displayRank(hand2.getRank());
+                                        System.out.println("You win!!!");
+                                        ca += bet;
+                                        w++;
+                                }
+                                else if (u < m)
+                                {
+                                    System.out.println("Your hand: " + hand1);
+                                    System.out.print("You have a ");
+                                    hand1.displayRank(hand1.getRank());
+                                    System.out.println("Opponents hand: " + hand2);
+                                    System.out.print("Opponent has a ");
+                                    hand2.displayRank(hand2.getRank());
+                                    System.out.println("You lose to hand 2");
+                                    ca -= bet;
+                                    lo++;
+                                }
+                                else
+                                {
+                                   //wtf went here? 
+                                    System.out.println("Tie As fuck");
+                                }
+                            }
+                   
+                            
+                            
                         }
                         
                     }
@@ -267,6 +306,7 @@ public class Poker {
                             ca += bet;
                             w++;
                         }
+                        //Tie
                         else if (hand1.getRank() < hand2.getRank())
                         {
                             System.out.println("Your hand: " + hand1);
@@ -278,10 +318,48 @@ public class Poker {
                             System.out.println("You lose to hand 2");
                             ca -= bet;
                             lo++;
+                     
+                           
                         }
                         else
                         {
-                            System.out.println("No one wins.");
+                            System.out.println("No one wins what.");
+                            if(hand1.getRank() == hand2.getRank())
+                            {
+                                int u,m;
+                                u = Integer.parseInt(hand1.getIntValue());
+                                m = Integer.parseInt(hand2.getIntValue());
+                                
+                                if(u > m)
+                                {
+                                        System.out.println("Your hand: " + hand1);
+                                        System.out.print("You have a ");
+                                        hand1.displayRank(hand1.getRank());
+                                        System.out.println("Opponents hand: " + hand2);
+                                        System.out.print("Opponent has a ");
+                                        hand2.displayRank(hand2.getRank());
+                                        System.out.println("You win!!!");
+                                        ca += bet;
+                                        w++;
+                                }
+                                else if (u < m)
+                                {
+                                    System.out.println("Your hand: " + hand1);
+                                    System.out.print("You have a ");
+                                    hand1.displayRank(hand1.getRank());
+                                    System.out.println("Opponents hand: " + hand2);
+                                    System.out.print("Opponent has a ");
+                                    hand2.displayRank(hand2.getRank());
+                                    System.out.println("You lose to hand 2");
+                                    ca -= bet;
+                                    lo++;
+                                }
+                                else
+                                {
+                                   //wtf went here? 
+                                    System.out.println("Tie As fuck");
+                                }
+                            }
                         }
                         
                     }
@@ -342,4 +420,5 @@ public class Poker {
         }
     }
 }
-
+//Integer.parseInt(this.getFace();
+// .compareto
