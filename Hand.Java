@@ -27,7 +27,7 @@ public class Hand implements Comparable<Object> {
 	}
         
 	//Sorts the cards in hand in a numerical order to check for possible winning hands. 
-	private ArrayList<Card> getHandInNumericalOrder() {
+	public ArrayList<Card> getHandInNumericalOrder() {
 		ArrayList<Card> sorted = new ArrayList<Card>();
 		sorted.addAll(this.theCards);
                 
@@ -76,21 +76,30 @@ public class Hand implements Comparable<Object> {
 	 */
         
         //should be used to check for pairs, three of kind, and 4 of kind          //could probably use this one by itself instead of previous method
-	private ArrayList<Integer> numberOfSameCards() {
+	public ArrayList<Integer> numberOfSameCards() {
 		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
-		
+		ArrayList<Card> tBreaker = new ArrayList<Card>();
 		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
 		int numbSame = 1;
 		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
 			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
+                          //used to compare secondary values
+                            tBreaker.add(sortedCards.get(i));
+                            
 				++numbSame;
 			} else {
 				for (int j = 0; j < numbSame; ++j) {
 					cardCounts.add(numbSame);
+                                                
 				}
 				numbSame = 1;
 			}
 		}
+//                    
+//                    for(int i = 0; i < tBreaker.size(); i++){
+//                        System.out.println(tBreaker.get(i));
+//                    }
+                            
 		for (int i = 0; i < numbSame; ++i) {
 			cardCounts.add(numbSame);
 		}
@@ -293,6 +302,21 @@ public class Hand implements Comparable<Object> {
 	}
 
 	
-	
+//        public ArrayList<Integer> tieBreakerPair() {
+//		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+//		
+//		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
+//		int numbSame = 1;
+//		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
+//			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
+//				++numbSame;
+//			} else {
+//				for (int j = 0; j < numbSame; ++j) {
+//					cardCounts.add(numbSame);
+//				}
+//				numbSame = 1;
+//			}
+//		}
+//	
 
 }
