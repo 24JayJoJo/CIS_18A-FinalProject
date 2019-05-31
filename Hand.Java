@@ -1,393 +1,332 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package poker;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Collections;
+import java.util.Comparator;
 
 
-/**
- *
- * @author Leodan
- */
-public class Poker {
 
-    /**
-     * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
-     */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        // TODO code application logic here
-        char ans;
-        double cash = 500;
-        int win = 0,lose = 0;
-        int x;
-        Card c = new Card("Diamond", "2");
-        Scanner keyboard = new Scanner(System.in);
+public class Hand implements Comparable<Object> {
+	
+	//Card[] theCards = new Card[10];                                       //not sure if this ever worked s
+    public String intValue;
+    private ArrayList<Card> theCards = new ArrayList<>();
+	//
+	public Hand(ArrayList<Card> theCards) {
+		this.theCards = theCards;
+	}
         
-        do
+        public String getIntValue()
         {
-            menu();
-
-            x = Integer.parseInt(keyboard.nextLine());
-            
-            while(x < 1 || x > 5)
-            {
-                System.out.println("invalid choice. Choose from 1 through 5:");
-                x = Integer.parseInt(keyboard.nextLine());
-                
-            }
-                
-            switch(x)
-            {
-                case 1:
-                {
-                    playGame(cash, win, lose, x);
-                    
-                    break;
-                }
-                case 2:
-                {
-                    playGame(cash, win, lose, x);
-                    break;
-                }
-                case 3:
-                {
-                    playGame(cash, win, lose, x);
-                    break;
-                }
-                case 4:
-                {
-                    playGame(cash, win, lose, x);
-                    break;
-                }
-                case 5:
-                {
-                    System.exit(0);
-                }
-
-                
-            }
-            
-
-            System.out.println("Would you like to go back to the main menu?(Y/N)");
-            ans = keyboard.nextLine().charAt(0);
-        }while(ans == 'Y' || ans == 'y');
+            return this.intValue;
+        }
+        public void setIntValue(String n)
+        {
+            this.intValue = n;
+        }
+	// separates each card in a hand with spaces and a comma
+	public String toString() {
+		String s = "";
+		for (Card c : theCards) {
+			s += c.toString() + ", ";
+		}
+		return s;
+	}
         
-        System.exit(0);
-    }
-    
-    //Methods used in main
-    public static void menu()
-    {
-        System.out.println("Welcome to Digital Poker!");
-        System.out.println("1. Start Game.");
-        System.out.println("2. Load saved File.");
-        System.out.println("3. Check Cash, Wins and Loses.");
-        System.out.println("4. Game Rules.");
-        System.out.println("5. Exit Game.");
-        System.out.print("Enter in the number of your choice: ");
-
-    }
-    
-    public static void playGame(double ca, int w, int lo, int x)
-    {
-        char ans = 'y';
-        double bet = 0;
-        String fname;
-        Scanner keyboard = new Scanner(System.in);
-        PrintWriter printer = null;
-        FileWriter fwrite = null;
-        
-        if(x == 1)
-        {
-                while (ans == 'Y' || ans == 'y')
-                {
-                    if(ca > 0)
-                    {
-                        CardDeck d = CardDeck.getStandardDeck();
-                        d.shuffle();
-                        ArrayList<Card> cards1 = new ArrayList<>();
-                        ArrayList<Card> cards2 = new ArrayList<>();
-
-                        for (int i = 0; i < 5; ++i)
-                        {
-                            cards1.add(d.deal());	
-                            cards2.add(d.deal());
-                        }
-                        Hand hand1 = new Hand(cards1);
-                        Hand hand2 = new Hand(cards2);
-
-
-                        System.out.println("How much money would you like to gamble?");
-                        System.out.println("Your cash: $" + ca);
-                        System.out.print("Gamble ammount: $");
-                        bet = Double.parseDouble(keyboard.nextLine());
-
-                        while(bet > ca)
-                        {
-                            System.out.println("You do not have that much money. Please enter a different value:");
-                            bet = Double.parseDouble(keyboard.nextLine());
-                        }
-
-                        if(hand1.getRank() > hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You win!!!");
-                            ca += bet;
-                            w++;
-                        }
-                        else if (hand1.getRank() < hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
-                            ca -= bet;
-                            lo++;
-                        }
-                        //Tie
-                        else
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("No one wins.");
-                   
-                            
-                            
-                        }
-                        
-                    }
-                    else
-                    {
-                        System.out.println("You have 0 dollars now. YOUR BROKE. YOU LOSE!!!");
-                        System.exit(0);
-                    }
-                    System.out.println("would you like to try again?");
-                    ans = keyboard.nextLine().charAt(0);
-                }
-
-                System.out.println("would you like to save the game?(Y/N)");
-                ans = keyboard.nextLine().charAt(0);
-
-                while(ans == 'Y' || ans == 'y')
-                {
-                    System.out.println("Please enter in a file name: ");
-                    fname = keyboard.nextLine();
-                    try 
-                    {
-                        fwrite = new FileWriter(fname, true);
-                        printer = new PrintWriter(fwrite);
-                    } 
-                    catch (IOException ex)
-                    {
-                       System.out.println("Blah - Some other io exception");
-                    }
-
-                    printer.println(ca + " " + w + " " + lo);
-
-                    printer.close();
-                    ans = 'n';
-                }
-            }
+	//Sorts the cards in hand in a numerical order to check for possible winning hands. 
+	public ArrayList<Card> getHandInNumericalOrder() {
+		ArrayList<Card> sorted = new ArrayList<Card>();
+		sorted.addAll(this.theCards);
                 
-        else if (x == 2)
-        {
-            System.out.print("Please enter in your file name: ");
-                    fname = keyboard.nextLine();
-                    File myFile = new File(fname);
-                    Scanner input = null;
-                    try {
-                         input = new Scanner(myFile);
-                        } catch (FileNotFoundException ex) {
-                            System.out.println("File not found!");
-                        }
-                    String lastLine = "";
-        //            * Output ONLY the last line you read back from the file.
-                    while (input.hasNextLine())
-                    {
-                        lastLine = input.nextLine();
-                    }
-                    
-                    String[] arrOfStr = lastLine.split(" ", 3);
-                    
-                    ca = Float.parseFloat(arrOfStr[0]);
-                    w = Integer.parseInt(arrOfStr[1]);
-                    lo = Integer.parseInt(arrOfStr[2]);
-                            
-                while (ans == 'Y' || ans == 'y')
-                {
-                    if(ca > 0)
-                    {
-                        CardDeck d = CardDeck.getStandardDeck();
-                        d.shuffle();
-                        ArrayList<Card> cards1 = new ArrayList<>();
-                        ArrayList<Card> cards2 = new ArrayList<>();
+                //uses comparator import
+		Collections.sort(sorted, new Comparator<Card>() {
 
-                        for (int i = 0; i < 5; ++i)
-                        {
-                            cards1.add(d.deal());	
-                            cards2.add(d.deal());
-                        }
-                        Hand hand1 = new Hand(cards1);
-                        Hand hand2 = new Hand(cards2);
+			@Override
+			public int compare(Card o1, Card o2) {
+				Integer o1Value = o1.getNumericalValue();
+				Integer o2Value = o2.getNumericalValue();
+				return o1Value.compareTo(o2Value);
+				
+			}
+			
+		});
+		return sorted;
+	}
 
-
-                        System.out.println("How much money would you like to gamble?");
-                        System.out.println("Your cash: $" + ca);
-                        System.out.print("Gamble ammount: $");
-                        bet = Double.parseDouble(keyboard.nextLine());
-
-                        while(bet > ca)
-                        {
-                            System.out.println("You do not have that much money. Please enter a different value:");
-                            bet = Double.parseDouble(keyboard.nextLine());
-                        }
-
-                        if(hand1.getRank() > hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You win!!!");
-                            ca += bet;
-                            w++;
-                        }
-                        //Tie
-                        else if (hand1.getRank() < hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
-                            ca -= bet;
-                            lo++;
-                     
+	/**
+	 * a method to get cards that have the same value
+	 */
+        
+        //checks for pairs
+        
+	private boolean isPair(ArrayList<Card> sortedCards) {
+		
+		Card previousCard = null;
+		for (Card c : sortedCards) {
+		
+			if (previousCard != null && previousCard.isSameFace(c)) {
+				return true;
+			} else {
+				previousCard = c;
+			}
+			
+			
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * if the sum of the integer array is equal to the following:
+	 * 1 - 
+	 * @return
+	 */
+        
+        //should be used to check for pairs, three of kind, and 4 of kind          //could probably use this one by itself instead of previous method
+	public ArrayList<Integer> numberOfSameCards() {
+		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+		ArrayList<Card> tBreaker = new ArrayList<Card>();
+		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
+		int numbSame = 1;
+		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
+			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
+                          //used to compare secondary values
+                            tBreaker.add(sortedCards.get(i));
+                            intValue = tBreaker.get(0).getFace();
+                            setIntValue(intValue);
                            
-                        }
-                        else
-                        {
                             
-                            {
-                                int u,m;
-                                u = Integer.parseInt(hand1.getIntValue());
-                                m = Integer.parseInt(hand2.getIntValue());
-                                
-                                if(u > m)
-                                {
-                                   System.out.println("Your hand: " + hand1);
-                                    System.out.print("You have a ");
-                                    hand1.displayRank(hand1.getRank());
-                                    System.out.println("Opponents hand: " + hand2);
-                                    System.out.print("Opponent has a ");
-                                     hand2.displayRank(hand2.getRank());
-                                     System.out.println("You win!!!");
-                                     ca += bet;
-                                     w++;
-                                }
-                                else if (u < m)
-                                {
-                                    System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
-                            ca -= bet;
-                            lo++;
-                                }
-                                else
-                                {
-                                    System.out.println("No one wins.");
-                            if(hand1.getRank() == hand2.getRank())
-                                }
-                            }
-                        }
+                            
+				++numbSame;
+			} else {
+				for (int j = 0; j < numbSame; ++j) {
+					cardCounts.add(numbSame);
+                                                
+				}
+				numbSame = 1;
+			}
+		}
+                    
+                            
+		for (int i = 0; i < numbSame; ++i) {
+			cardCounts.add(numbSame);
+		}
+		
+		
+		return cardCounts;
+	}
+	
+	/**
+	 * 5 - high card || straight || straight flush || flush
+	 * 7 - pair
+	 * 9 - 2 pair
+	 * 11 - 3 of a kind
+	 * 13 - full house
+	 * 17 - four of a kind
+	 * @param inputArray
+	 * @return
+	 */
+	public int getSum(ArrayList<Integer> inputArray) {
+		int sum = 0;
+		for (int i : inputArray) {
+			sum += i;
+		}
+		return sum;
+	}
+	
+	/**
+	 * 0 - high card
+	 * 1 - pair
+	 * 2 - 2 pair
+	 * 3 - three of a kind
+	 * 4 - straight
+	 * 5 - flush
+	 * 6 - full house
+	 * 7 - four of a kind
+	 * 8 - straight flush
+	 * @return
+	 */
+	public int getRank() {
+		ArrayList<Card> sorted = this.getHandInNumericalOrder();
+		int rawSum = getSum(numberOfSameCards());
+                int x1;
+		switch (rawSum) {
+			case 7:
+                            x1 = 1;
+				return x1;
+			case 9:
+                            x1 = 2;
+				return x1;
+			case 11:
+                            x1 = 3;
+				return x1;
+			case 13:
+                            x1 = 6;
+				return x1;
+			case 17:
+                            x1 = 7;
+				return x1;
+			default:
+				//TODO CHECK FOR ALL OTHER HAND TYPES
+		}
+		boolean isFlush = isFlush(sorted);
+		boolean isStraight = isStraight(sorted);
+		if (isFlush && isStraight) {
+                    x1 = 8;
+			return x1;
+		} else if (isFlush) {
+                    x1 = 5;
+			return x1;
+		} else if (isStraight) {
+                    x1 = 4;
+			return x1;
+		} else {
+                    x1 = 0;
+			return x1;
                         
-                    }
-                    else
-                    {
-                        System.out.println("You have 0 dollars now. YOUR BROKE. YOU LOSE!!!");
-                        System.exit(0);
-                    }
-                    System.out.println("would you like to try again?");
-                    ans = keyboard.nextLine().charAt(0);
-                }
-                    try 
-                    {
-                        fwrite = new FileWriter(fname, true);
-                        printer = new PrintWriter(fwrite);
-                    } 
-                    catch (IOException ex)
-                    {
-                       System.out.println("Blah - Some other io exception");
-                    }
-
-                    printer.println(ca + " " + w + " " + lo);
-
-                    printer.close();
+		}
+	}
+        //This can be used to compare secondary values using these if statements
+        public void displayRank(int x)
+        {
+            if(x == 0)
+            {
+                System.out.println("High Card");
                 
+                //sort both hands then compare values for max element. If equal compare 2nd highest element(Kicker) to determine winner, Possible up to
+                //all 5 cards
+            }
+            else if(x == 1)
+            {
+                System.out.println("Pair");
+                //If both hands have pair...
+                //compare cards using previous booleans Store values that match using boolean and compare those
+            }
+            else if(x == 2)
+            {
+                
+                //If both hands have Two Pairs...
+                //Same as pair but only need one of each face to compare 
+                System.out.println("Two Pairs");
+            }
+            else if(x == 3)
+            {
+                
+                //If both hands have Three of a kind...
+                //only need one element to compare which is highest
+                System.out.println("Three of a kind");
+            }
+            else if(x == 4)
+            {
+                //If both hands have Straight
+                //Need to compare highest face card only for winner
+                System.out.println("Straight");
+            }
+            else if(x == 5)
+            {
+                //If both hands have Flush
+                //Highest face card wins, if equal, second highest
+                System.out.println("Flush");
+            }
+            else if(x == 6)
+            {
+                //If both hands have Full House
+                //only two possible face cards      // a full house is a 3 of a kind and also a pair in one hand
+                //compare highest face in full house to determine winner
+                //Second face is the kicker
+                System.out.println("Full House");
+            }
+            else if(x == 7)
+            {
+                //If both hands have Four of a kind
+                //Compare face card used for the four of a kind
+                System.out.println("Four of a kind");
+            }
+            else
+            {
+                //If both hands have Straight Flush
+                //Highest face card wins
+                System.out.println("Straight Flush");
+                //If highest face card is ace, print out "Royal Flush"(Highest Possible hand in poker). 
+              
+            }
         }
-        else if(x == 3)
-        {
-            System.out.println("Enter in file name to check how many your cash, wins and loses:");
-             fname = keyboard.nextLine();
-                    File myFile = new File(fname);
-                    Scanner input = null;
-                    try {
-                         input = new Scanner(myFile);
-                        } catch (FileNotFoundException ex) {
-                            System.out.println("File not found!");
-                        }
-                    String lastLine = "";
-        //            * Output ONLY the last line you read back from the file.
-                    while (input.hasNextLine())
-                    {
-                        lastLine = input.nextLine();
-                    }
-                    
-                    String[] arrOfStr = lastLine.split(" ", 3);
-                    
-                    System.out.println("Cash: $" + arrOfStr[0] + " Wins: " + arrOfStr[1] + " Loses: " + arrOfStr[2]);        
-        }
-        else
-        {
-            System.out.println("Digital Poker Rules.");
-            System.out.println("It's your hand against the opponent's hand.");
-            System.out.println("You start with $500 and can bet any amount you'd like.");
-            System.out.println("If you reach $0 then it's game over!....Loser");
-            System.out.println("If your hand wins, payout is double your bet.");
-            System.out.println("If you lose, you will lose the money that you bet.");
-            System.out.println("If you tie with your opponent, you neither win nor lose money.");
-        }
-    }
+	
+	private boolean isFlush(ArrayList<Card> theCards) {
+		
+		for (int i = 0; i < theCards.size() - 1; i++) {
+			if (!theCards.get(i).isSameSuit(theCards.get(i + 1))) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
+	
+	/**
+	 * 
+	 * @param sortedCards - all have unique faces
+	 * @return
+	 */
+	private boolean isStraight(ArrayList<Card> sortedCards) {
+		
+		for (int i = 0; i < theCards.size() - 1; i++) {
+			int current = theCards.get(i).getNumericalValue();
+			int next = theCards.get(i + 1).getNumericalValue();
+			
+			if (current + 1 == next || 
+					(current == 5 && next == 14)) {
+				continue;
+			} else {
+				return false;
+			}
+			
+		}
+		return true;
+		
+	}
+
+	/**
+	 * 0 -> equal
+	 * 1 -> this > o
+	 * -1 -> this < o
+	 */
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof Hand)) {
+			return 1;
+		}
+		Hand other = (Hand)o;
+		
+		boolean isThisPair = this.isPair(this.getHandInNumericalOrder());
+		
+		ArrayList<Card> otherNumerical = other.getHandInNumericalOrder();
+		ArrayList<Card> thisNumerical = this.getHandInNumericalOrder();
+		
+		
+		//call the card hierarchy class
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	
+//        public ArrayList<Integer> tieBreakerPair() {
+//		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+//		
+//		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
+//		int numbSame = 1;
+//		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
+//			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
+//				++numbSame;
+//			} else {
+//				for (int j = 0; j < numbSame; ++j) {
+//					cardCounts.add(numbSame);
+//				}
+//				numbSame = 1;
+//			}
+//		}
+//	
+
 }
-//Integer.parseInt(this.getFace();
-// .compareto
