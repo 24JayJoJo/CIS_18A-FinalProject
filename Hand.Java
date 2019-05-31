@@ -56,17 +56,7 @@ public class Hand implements Comparable<Object> {
 		
 		Card previousCard = null;
 		for (Card c : sortedCards) {
-			/*                                                      //Not used 
-			if (previousCard == null) {
-				previousCard = c;
-			} else {
-				if (previousCard.isSameFace(c)) {
-					return true;
-				} else {
-					previousCard = c;
-				}
-			}
-			*/
+		
 			if (previousCard != null && previousCard.isSameFace(c)) {
 				return true;
 			} else {
@@ -185,6 +175,7 @@ public class Hand implements Comparable<Object> {
             if(x == 0)
             {
                 System.out.println("High Card");
+                
                 //sort both hands then compare values for max element. If equal compare 2nd highest element(Kicker) to determine winner, Possible up to
                 //all 5 cards
             }
