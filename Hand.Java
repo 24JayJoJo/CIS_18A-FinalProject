@@ -11,12 +11,21 @@ import java.util.Comparator;
 public class Hand implements Comparable<Object> {
 	
 	//Card[] theCards = new Card[10];                                       //not sure if this ever worked s
-
+    public String intValue;
     private ArrayList<Card> theCards = new ArrayList<>();
 	//
 	public Hand(ArrayList<Card> theCards) {
 		this.theCards = theCards;
 	}
+        
+        public String getIntValue()
+        {
+            return this.intValue;
+        }
+        public void setIntValue(String n)
+        {
+            this.intValue = n;
+        }
 	// separates each card in a hand with spaces and a comma
 	public String toString() {
 		String s = "";
@@ -85,6 +94,10 @@ public class Hand implements Comparable<Object> {
 			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
                           //used to compare secondary values
                             tBreaker.add(sortedCards.get(i));
+                            intValue = tBreaker.get(0).getFace();
+                            setIntValue(intValue);
+                           
+                            
                             
 				++numbSame;
 			} else {
@@ -95,10 +108,7 @@ public class Hand implements Comparable<Object> {
 				numbSame = 1;
 			}
 		}
-//                    
-//                    for(int i = 0; i < tBreaker.size(); i++){
-//                        System.out.println(tBreaker.get(i));
-//                    }
+                    
                             
 		for (int i = 0; i < numbSame; ++i) {
 			cardCounts.add(numbSame);
