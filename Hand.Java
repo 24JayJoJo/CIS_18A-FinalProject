@@ -10,14 +10,12 @@ import java.util.Comparator;
 
 public class Hand implements Comparable<Object> {
 	
-	//Card[] theCards = new Card[10];                                       //not sure if this ever worked s
-    public String intValue;
+	
+    public String intValue ;
+    public String maxValue ;
+    public float checkR;
     private ArrayList<Card> theCards = new ArrayList<>();
 	//
-	public Hand(ArrayList<Card> theCards) {
-		this.theCards = theCards;
-	}
-        
         public String getIntValue()
         {
             return this.intValue;
@@ -26,6 +24,11 @@ public class Hand implements Comparable<Object> {
         {
             this.intValue = n;
         }
+        
+	public Hand(ArrayList<Card> theCards) {
+		this.theCards = theCards;
+	}
+        
 	// separates each card in a hand with spaces and a comma
 	public String toString() {
 		String s = "";
@@ -36,7 +39,7 @@ public class Hand implements Comparable<Object> {
 	}
         
 	//Sorts the cards in hand in a numerical order to check for possible winning hands. 
-	public ArrayList<Card> getHandInNumericalOrder() {
+	private ArrayList<Card> getHandInNumericalOrder() {
 		ArrayList<Card> sorted = new ArrayList<Card>();
 		sorted.addAll(this.theCards);
                 
@@ -65,7 +68,17 @@ public class Hand implements Comparable<Object> {
 		
 		Card previousCard = null;
 		for (Card c : sortedCards) {
-		
+			/*                                                      //Not used 
+			if (previousCard == null) {
+				previousCard = c;
+			} else {
+				if (previousCard.isSameFace(c)) {
+					return true;
+				} else {
+					previousCard = c;
+				}
+			}
+			*/
 			if (previousCard != null && previousCard.isSameFace(c)) {
 				return true;
 			} else {
@@ -85,31 +98,28 @@ public class Hand implements Comparable<Object> {
 	 */
         
         //should be used to check for pairs, three of kind, and 4 of kind          //could probably use this one by itself instead of previous method
-	public ArrayList<Integer> numberOfSameCards() {
+	private ArrayList<Integer> numberOfSameCards() {
 		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
 		ArrayList<Card> tBreaker = new ArrayList<Card>();
 		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
 		int numbSame = 1;
+                intValue =sortedCards.get(0).getFace();
+                maxValue =sortedCards.get(4).getFace(); //ran out of time still need to use this in poker
 		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
 			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
-                          //used to compare secondary values
-                            tBreaker.add(sortedCards.get(i));
-                            intValue = tBreaker.get(0).getFace();
-                            setIntValue(intValue);
+                            //used to compare secondary values
                            
-                            
-                            
+                            intValue = sortedCards.get(0).getFace();
+                            setIntValue(intValue);
+     
 				++numbSame;
 			} else {
 				for (int j = 0; j < numbSame; ++j) {
 					cardCounts.add(numbSame);
-                                                
 				}
 				numbSame = 1;
 			}
 		}
-                    
-                            
 		for (int i = 0; i < numbSame; ++i) {
 			cardCounts.add(numbSame);
 		}
@@ -188,69 +198,44 @@ public class Hand implements Comparable<Object> {
                         
 		}
 	}
-        //This can be used to compare secondary values using these if statements
+        
         public void displayRank(int x)
         {
             if(x == 0)
             {
                 System.out.println("High Card");
-                
-                //sort both hands then compare values for max element. If equal compare 2nd highest element(Kicker) to determine winner, Possible up to
-                //all 5 cards
             }
             else if(x == 1)
             {
                 System.out.println("Pair");
-                //If both hands have pair...
-                //compare cards using previous booleans Store values that match using boolean and compare those
             }
             else if(x == 2)
             {
-                
-                //If both hands have Two Pairs...
-                //Same as pair but only need one of each face to compare 
                 System.out.println("Two Pairs");
             }
             else if(x == 3)
             {
-                
-                //If both hands have Three of a kind...
-                //only need one element to compare which is highest
                 System.out.println("Three of a kind");
             }
             else if(x == 4)
             {
-                //If both hands have Straight
-                //Need to compare highest face card only for winner
                 System.out.println("Straight");
             }
             else if(x == 5)
             {
-                //If both hands have Flush
-                //Highest face card wins, if equal, second highest
                 System.out.println("Flush");
             }
             else if(x == 6)
             {
-                //If both hands have Full House
-                //only two possible face cards      // a full house is a 3 of a kind and also a pair in one hand
-                //compare highest face in full house to determine winner
-                //Second face is the kicker
                 System.out.println("Full House");
             }
             else if(x == 7)
             {
-                //If both hands have Four of a kind
-                //Compare face card used for the four of a kind
                 System.out.println("Four of a kind");
             }
             else
             {
-                //If both hands have Straight Flush
-                //Highest face card wins
                 System.out.println("Straight Flush");
-                //If highest face card is ace, print out "Royal Flush"(Highest Possible hand in poker). 
-              
             }
         }
 	
@@ -310,23 +295,5 @@ public class Hand implements Comparable<Object> {
 		// TODO Auto-generated method stub
 		return 1;
 	}
-
-	
-//        public ArrayList<Integer> tieBreakerPair() {
-//		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
-//		
-//		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
-//		int numbSame = 1;
-//		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
-//			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
-//				++numbSame;
-//			} else {
-//				for (int j = 0; j < numbSame; ++j) {
-//					cardCounts.add(numbSame);
-//				}
-//				numbSame = 1;
-//			}
-//		}
-//	
 
 }
