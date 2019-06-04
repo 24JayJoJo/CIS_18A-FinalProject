@@ -37,14 +37,21 @@ public class Poker {
         {
             menu();
 
-            x = Integer.parseInt(keyboard.nextLine());
-            
-            while(x < 1 || x > 5)
+            try {
+                x = Integer.parseInt(keyboard.nextLine());
+                while(x < 1 || x > 5)
             {
                 System.out.println("invalid choice. Choose from 1 through 5:");
                 x = Integer.parseInt(keyboard.nextLine());
                 
             }
+            } catch (NumberFormatException numberFormatException) {
+                
+                System.out.println("Wrong Input try Again");
+                x = Integer.parseInt(keyboard.nextLine());
+                
+            }
+            
                 
             switch(x)
             {
@@ -85,7 +92,6 @@ public class Poker {
         System.exit(0);
     }
     
-    //Methods used in main
     public static void menu()
     {
         System.out.println("Welcome to Digital Poker!");
@@ -98,10 +104,9 @@ public class Poker {
 
     }
     
-    public static void playGame(double ca, int w, int lo, int x)
+    public static void playGame(double ca, int w, int lo, int x) throws FileNotFoundException
     {
-        char ans = 'y';
-        double bet = 0;
+        String ans = "Y";
         String fname;
         Scanner keyboard = new Scanner(System.in);
         PrintWriter printer = null;
@@ -109,104 +114,11 @@ public class Poker {
         
         if(x == 1)
         {
-                while (ans == 'Y' || ans == 'y')
+                while (ans.equalsIgnoreCase("Y"))
                 {
                     if(ca > 0)
                     {
-                        CardDeck d = CardDeck.getStandardDeck();
-                        d.shuffle();
-                        ArrayList<Card> cards1 = new ArrayList<>();
-                        ArrayList<Card> cards2 = new ArrayList<>();
-
-                        for (int i = 0; i < 5; ++i)
-                        {
-                            cards1.add(d.deal());	
-                            cards2.add(d.deal());
-                        }
-                        Hand hand1 = new Hand(cards1);
-                        Hand hand2 = new Hand(cards2);
-
-
-                        System.out.println("How much money would you like to gamble?");
-                        System.out.println("Your cash: $" + ca);
-                        System.out.print("Gamble ammount: $");
-                        bet = Double.parseDouble(keyboard.nextLine());
-
-                        while(bet > ca)
-                        {
-                            System.out.println("You do not have that much money. Please enter a different value:");
-                            bet = Double.parseDouble(keyboard.nextLine());
-                        }
-
-                        if(hand1.getRank() > hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You win!!!");
-                            ca += bet;
-                            w++;
-                        }
-                        else if (hand1.getRank() < hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
-                            ca -= bet;
-                            lo++;
-                        }
-                        //Tie
-                        else
-                        {
-                            System.out.println("No one wins what.");
-                            if(hand1.getRank() == hand2.getRank())
-                            {
-                                int u,m;
-                                u = Integer.parseInt(hand1.getIntValue());
-                                m = Integer.parseInt(hand2.getIntValue());
-                                
-                                if(u > m)
-                                {
-                                        System.out.println("Your hand: " + hand1);
-                                        System.out.print("You have a ");
-                                        hand1.displayRank(hand1.getRank());
-                                        System.out.println("Opponents hand: " + hand2);
-                                        System.out.print("Opponent has a ");
-                                        hand2.displayRank(hand2.getRank());
-                                        System.out.println("You win!!!");
-                                        ca += bet;
-                                        w++;
-                                }
-                                else if (u < m)
-                                {
-                                    System.out.println("Your hand: " + hand1);
-                                    System.out.print("You have a ");
-                                    hand1.displayRank(hand1.getRank());
-                                    System.out.println("Opponents hand: " + hand2);
-                                    System.out.print("Opponent has a ");
-                                    hand2.displayRank(hand2.getRank());
-                                    System.out.println("You lose to hand 2");
-                                    ca -= bet;
-                                    lo++;
-                                }
-                                else
-                                {
-                                   //wtf went here? 
-                                    System.out.println("Tie As fuck");
-                                }
-                            }
-                   
-                            
-                            
-                        }
-                        
+                        enterPokerTable(ca, w, lo);
                     }
                     else
                     {
@@ -214,13 +126,33 @@ public class Poker {
                         System.exit(0);
                     }
                     System.out.println("would you like to try again?");
-                    ans = keyboard.nextLine().charAt(0);
+                    try {
+                        ans = keyboard.nextLine().substring(0, 1);
+                        while(! (ans.equalsIgnoreCase("Y") || ans.equalsIgnoreCase("N")))
+                        {
+                            System.out.print("Invalid Input 1. Try Again: ");
+                            ans = keyboard.nextLine().substring(0, 1);
+                        }
+                    } catch (Exception e) {
+                        System.out.print("Invalid Input 2. Try Again: ");
+                        ans = keyboard.nextLine().substring(0, 1);
+                    }
                 }
 
                 System.out.println("would you like to save the game?(Y/N)");
-                ans = keyboard.nextLine().charAt(0);
+                try {
+                        ans = keyboard.nextLine().substring(0, 1);
+                        while(! (ans.equalsIgnoreCase("Y") || ans.equalsIgnoreCase("N")))
+                        {
+                            System.out.print("Invalid Input 1. Try Again: ");
+                            ans = keyboard.nextLine().substring(0, 1);
+                        }
+                    } catch (Exception e) {
+                        System.out.print("Invalid Input 2. Try Again: ");
+                        ans = keyboard.nextLine().substring(0, 1);
+                    }
 
-                while(ans == 'Y' || ans == 'y')
+                while(ans.equalsIgnoreCase("Y"))
                 {
                     System.out.println("Please enter in a file name: ");
                     fname = keyboard.nextLine();
@@ -237,7 +169,6 @@ public class Poker {
                     printer.println(ca + " " + w + " " + lo);
 
                     printer.close();
-                    ans = 'n';
                 }
             }
                 
@@ -247,121 +178,25 @@ public class Poker {
                     fname = keyboard.nextLine();
                     File myFile = new File(fname);
                     Scanner input = null;
-                    try {
-                         input = new Scanner(myFile);
-                        } catch (FileNotFoundException ex) {
-                            System.out.println("File not found!");
-                        }
+                     input = new Scanner(myFile);
                     String lastLine = "";
         //            * Output ONLY the last line you read back from the file.
                     while (input.hasNextLine())
                     {
                         lastLine = input.nextLine();
-                    }
+                    }String[] arrOfStr = lastLine.split(" ", 3);
                     
-                    String[] arrOfStr = lastLine.split(" ", 3);
+                    
                     
                     ca = Float.parseFloat(arrOfStr[0]);
                     w = Integer.parseInt(arrOfStr[1]);
                     lo = Integer.parseInt(arrOfStr[2]);
                             
-                while (ans == 'Y' || ans == 'y')
+                while (ans.equalsIgnoreCase("Y"))
                 {
                     if(ca > 0)
                     {
-                        CardDeck d = CardDeck.getStandardDeck();
-                        d.shuffle();
-                        ArrayList<Card> cards1 = new ArrayList<>();
-                        ArrayList<Card> cards2 = new ArrayList<>();
-
-                        for (int i = 0; i < 5; ++i)
-                        {
-                            cards1.add(d.deal());	
-                            cards2.add(d.deal());
-                        }
-                        Hand hand1 = new Hand(cards1);
-                        Hand hand2 = new Hand(cards2);
-
-
-                        System.out.println("How much money would you like to gamble?");
-                        System.out.println("Your cash: $" + ca);
-                        System.out.print("Gamble ammount: $");
-                        bet = Double.parseDouble(keyboard.nextLine());
-
-                        while(bet > ca)
-                        {
-                            System.out.println("You do not have that much money. Please enter a different value:");
-                            bet = Double.parseDouble(keyboard.nextLine());
-                        }
-
-                        if(hand1.getRank() > hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You win!!!");
-                            ca += bet;
-                            w++;
-                        }
-                        //Tie
-                        else if (hand1.getRank() < hand2.getRank())
-                        {
-                            System.out.println("Your hand: " + hand1);
-                            System.out.print("You have a ");
-                            hand1.displayRank(hand1.getRank());
-                            System.out.println("Opponents hand: " + hand2);
-                            System.out.print("Opponent has a ");
-                            hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
-                            ca -= bet;
-                            lo++;
-                     
-                           
-                        }
-                        else
-                        {
-                            System.out.println("No one wins what.");
-                            if(hand1.getRank() == hand2.getRank())
-                            {
-                                int u,m;
-                                u = Integer.parseInt(hand1.getIntValue());
-                                m = Integer.parseInt(hand2.getIntValue());
-                                
-                                if(u > m)
-                                {
-                                        System.out.println("Your hand: " + hand1);
-                                        System.out.print("You have a ");
-                                        hand1.displayRank(hand1.getRank());
-                                        System.out.println("Opponents hand: " + hand2);
-                                        System.out.print("Opponent has a ");
-                                        hand2.displayRank(hand2.getRank());
-                                        System.out.println("You win!!!");
-                                        ca += bet;
-                                        w++;
-                                }
-                                else if (u < m)
-                                {
-                                    System.out.println("Your hand: " + hand1);
-                                    System.out.print("You have a ");
-                                    hand1.displayRank(hand1.getRank());
-                                    System.out.println("Opponents hand: " + hand2);
-                                    System.out.print("Opponent has a ");
-                                    hand2.displayRank(hand2.getRank());
-                                    System.out.println("You lose to hand 2");
-                                    ca -= bet;
-                                    lo++;
-                                }
-                                else
-                                {
-                                   //wtf went here? 
-                                    System.out.println("Tie As fuck");
-                                }
-                            }
-                        }
-                        
+                        enterPokerTable(ca, w, lo);
                     }
                     else
                     {
@@ -369,7 +204,17 @@ public class Poker {
                         System.exit(0);
                     }
                     System.out.println("would you like to try again?");
-                    ans = keyboard.nextLine().charAt(0);
+                    try {
+                        ans = keyboard.nextLine().substring(0, 1);
+                        while(! (ans.equalsIgnoreCase("Y") || ans.equalsIgnoreCase("N")))
+                        {
+                            System.out.print("Invalid Input 1. Try Again: ");
+                            ans = keyboard.nextLine().substring(0, 1);
+                        }
+                    } catch (Exception e) {
+                        System.out.print("Invalid Input 2. Try Again: ");
+                        ans = keyboard.nextLine().substring(0, 1);
+                    }
                 }
                     try 
                     {
@@ -411,14 +256,116 @@ public class Poker {
         else
         {
             System.out.println("Digital Poker Rules.");
-            System.out.println("It's your hand against the opponent's hand.");
-            System.out.println("You start with $500 and can bet any amount you'd like.");
-            System.out.println("If you reach $0 then it's game over!....Loser");
-            System.out.println("If your hand wins, payout is double your bet.");
-            System.out.println("If you lose, you will lose the money that you bet.");
-            System.out.println("If you tie with your opponent, you neither win nor lose money.");
+            System.out.println("You are Hand 1 and playing poker against Hand 2.");
+            System.out.println("You start off with $500 and bet the amount you want, but BE CAREFULL!");
+            System.out.println("The cash can be gone before you know it and you will be a broke loser on the streets of Vegas.");
+            System.out.println("And if you reach 0 dollars then you won't be able to save the game!");
+            System.out.println("Why would you wanna save $0. Its only a reminder that your a loser!");
+            System.out.println("If your hand wins, you keep the money you bet plus 50% of the bet money added on to it.");
+            System.out.println("If you lose, you will just lose the money that you bet. As simple as That!");
         }
     }
+    public static void enterPokerTable(double ca, int w, int lo)
+    {
+        double bet = 0;
+        Scanner keyboard = new Scanner(System.in);
+        
+        CardDeck d = CardDeck.getStandardDeck();
+                        d.shuffle();
+                        ArrayList<Card> cards1 = new ArrayList<>();
+                        ArrayList<Card> cards2 = new ArrayList<>();
+
+                        for (int i = 0; i < 5; ++i)
+                        {
+                            cards1.add(d.deal());	
+                            cards2.add(d.deal());
+                        }
+                        Hand hand1 = new Hand(cards1);
+                        Hand hand2 = new Hand(cards2);
+
+
+                        System.out.println("How much money would you like to gamble?");
+                        System.out.println("Your cash: $" + ca);
+                        System.out.print("Gamble ammount: $");
+                        try {
+                            bet = Double.parseDouble(keyboard.nextLine());
+                            while(bet > ca)
+                            {
+                                System.out.println("You do not have that much money. Please enter a different value:");
+                                bet = Double.parseDouble(keyboard.nextLine());
+                                  keyboard.close();
+                            }
+                        } catch (NumberFormatException numberFormatException) {
+                            System.out.print("Invalid Input. Try Again: $");
+                            bet = Double.parseDouble(keyboard.nextLine());
+                            keyboard.close();
+                        }
+
+                        if(hand1.getRank() > hand2.getRank())
+                        {
+                            System.out.println("Your hand: " + hand1);
+                            System.out.print("You have a ");
+                            hand1.displayRank(hand1.getRank());
+                            System.out.println("Opponents hand: " + hand2);
+                            System.out.print("Opponent has a ");
+                            hand2.displayRank(hand2.getRank());
+                            System.out.println("You win!!!");
+                            ca += bet ;
+                            w++;
+                        }
+                        else if (hand1.getRank() < hand2.getRank())
+                        {
+                            System.out.println("Your hand: " + hand1);
+                            System.out.print("You have a ");
+                            hand1.displayRank(hand1.getRank());
+                            System.out.println("Opponents hand: " + hand2);
+                            System.out.print("Opponent has a ");
+                            hand2.displayRank(hand2.getRank());
+                            System.out.println("You lose to hand 2");
+                            ca -= bet;
+                            lo++;
+                        }
+                       else
+                        {
+                            System.out.println("No one wins what.");
+                            if(hand1.getRank() == hand2.getRank())
+                            {
+                                int u,m;
+                                u = Integer.parseInt(hand1.getIntValue());
+                                m = Integer.parseInt(hand2.getIntValue());
+                                
+                                if(u > m)
+                                {
+                                        System.out.println("Your hand: " + hand1);
+                                        System.out.print("You have a ");
+                                        hand1.displayRank(hand1.getRank());
+                                        System.out.println("Opponents hand: " + hand2);
+                                        System.out.print("Opponent has a ");
+                                        hand2.displayRank(hand2.getRank());
+                                        System.out.println("You win!!!");
+                                        ca += bet;
+                                        w++;
+                                }
+                                else if (u < m)
+                                {
+                                    System.out.println("Your hand: " + hand1);
+                                    System.out.print("You have a ");
+                                    hand1.displayRank(hand1.getRank());
+                                    System.out.println("Opponents hand: " + hand2);
+                                    System.out.print("Opponent has a ");
+                                    hand2.displayRank(hand2.getRank());
+                                    System.out.println("You lose to hand 2");
+                                    ca -= bet;
+                                    lo++;
+                                }
+                                else
+                                {
+                                   //program crashes here, need to keep it going again. 
+                                    System.out.println("Tie As fuck");
+                                }
+                            
+                                }
+                        }
+    }
 }
-//Integer.parseInt(this.getFace();
-// .compareto
+
