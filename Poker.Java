@@ -28,7 +28,7 @@ public class Poker {
         // TODO code application logic here
         char ans;
         double cash = 500;
-        int win = 0,lose = 0;
+        double win = 0,lose = 0;
         int x;
         Card c = new Card("Diamond", "2");
         Scanner keyboard = new Scanner(System.in);
@@ -104,10 +104,11 @@ public class Poker {
 
     }
     
-    public static void playGame(double ca, int w, int lo, int x) throws FileNotFoundException
+    public static void playGame(double ca, double w, double lo, int x) throws FileNotFoundException
     {
         String ans = "Y";
         String fname;
+        double[] info1 = new double[3];
         Scanner keyboard = new Scanner(System.in);
         PrintWriter printer = null;
         FileWriter fwrite = null;
@@ -118,11 +119,15 @@ public class Poker {
                 {
                     if(ca > 0)
                     {
-                        enterPokerTable(ca, w, lo);
+                        info1 = enterPokerTable(ca, w, lo);
+                        ca = info1[0];
+                        w = info1[1];
+                        lo = info1[2];
+
                     }
                     else
                     {
-                        System.out.println("You have 0 dollars now. YOUR BROKE. YOU LOSE!!!");
+                        System.out.println("\nYou're out of cash! Game Over Loser!");
                         System.exit(0);
                     }
                     System.out.println("would you like to try again?");
@@ -169,9 +174,10 @@ public class Poker {
                     printer.println(ca + " " + w + " " + lo);
 
                     printer.close();
+                    ans = "n";
                 }
             }
-                
+        //Not reading previous win/loss information, gets overwritten        
         else if (x == 2)
         {
             System.out.print("Please enter in your file name: ");
@@ -188,15 +194,18 @@ public class Poker {
                     
                     
                     
-                    ca = Float.parseFloat(arrOfStr[0]);
-                    w = Integer.parseInt(arrOfStr[1]);
-                    lo = Integer.parseInt(arrOfStr[2]);
+                    ca = Double.parseDouble(arrOfStr[0]);
+                    w = Double.parseDouble(arrOfStr[1]);
+                    lo = Double.parseDouble(arrOfStr[2]);
                             
                 while (ans.equalsIgnoreCase("Y"))
                 {
                     if(ca > 0)
                     {
-                        enterPokerTable(ca, w, lo);
+                        info1 = enterPokerTable(ca, w, lo);
+                        ca = info1[0];
+                        w = info1[1];
+                        lo = info1[2];
                     }
                     else
                     {
@@ -253,7 +262,7 @@ public class Poker {
                     
                     System.out.println("Cash: $" + arrOfStr[0] + " Wins: " + arrOfStr[1] + " Loses: " + arrOfStr[2]);        
         }
-      else
+        else
         {
             System.out.println("Digital Poker Rules.");
             System.out.println("It's your hand against the opponent's hand, Highest hand wins.");
@@ -263,11 +272,11 @@ public class Poker {
             System.out.println("If you lose, you will lose your bet.");
             System.out.println("If you tie with your opponent, you will neither win nor lose money.");
         }
-
     }
-    public static void enterPokerTable(double ca, int w, int lo)
+    public static double[] enterPokerTable(double ca, double w, double lo)
     {
         double bet = 0;
+        double[] info = new double[3];
         Scanner keyboard = new Scanner(System.in);
         
         CardDeck d = CardDeck.getStandardDeck();
@@ -284,7 +293,7 @@ public class Poker {
                         Hand hand2 = new Hand(cards2);
 
 
-                        System.out.println("How much money would you like to gamble?");
+                        System.out.println("\nHow much money would you like to gamble?");
                         System.out.println("Your cash: $" + ca);
                         System.out.print("Gamble ammount: $");
                         try {
@@ -293,17 +302,15 @@ public class Poker {
                             {
                                 System.out.println("You do not have that much money. Please enter a different value:");
                                 bet = Double.parseDouble(keyboard.nextLine());
-                                  keyboard.close();
                             }
                         } catch (NumberFormatException numberFormatException) {
                             System.out.print("Invalid Input. Try Again: $");
                             bet = Double.parseDouble(keyboard.nextLine());
-                            keyboard.close();
                         }
 
                         if(hand1.getRank() > hand2.getRank())
                         {
-                            System.out.println("Your hand: " + hand1);
+                            System.out.println("\nYour hand: " + hand1);
                             System.out.print("You have a ");
                             hand1.displayRank(hand1.getRank());
                             System.out.println("Opponents hand: " + hand2);
@@ -312,10 +319,12 @@ public class Poker {
                             System.out.println("You win!!!");
                             ca += bet ;
                             w++;
+                            info[0] = ca;
+                            info[1] = w;
                         }
                         else if (hand1.getRank() < hand2.getRank())
                         {
-                            System.out.println("Your hand: " + hand1);
+                            System.out.println("\nYour hand: " + hand1);
                             System.out.print("You have a ");
                             hand1.displayRank(hand1.getRank());
                             System.out.println("Opponents hand: " + hand2);
@@ -324,18 +333,21 @@ public class Poker {
                             System.out.println("You lose to hand 2");
                             ca -= bet;
                             lo++;
+                            info[0] = ca;
+                            info[2] = lo;
                         }
-                       else
-                        {
-                            System.out.println("No one wins what.");
+                        else
+                        {   
+                            System.out.println("\nMatching Ranks, Highest combination  wins\n");
                             if(hand1.getRank() == hand2.getRank())
                             {
-                                int u,m;
-                                u = Integer.parseInt(hand1.getIntValue());
-                                m = Integer.parseInt(hand2.getIntValue());
-                                
+                                int u,m; //change name to rankValue
+                                u = (hand1.getIntValue());
+                                m = (hand2.getIntValue());
+
                                 if(u > m)
                                 {
+
                                         System.out.println("Your hand: " + hand1);
                                         System.out.print("You have a ");
                                         hand1.displayRank(hand1.getRank());
@@ -343,10 +355,66 @@ public class Poker {
                                         System.out.print("Opponent has a ");
                                         hand2.displayRank(hand2.getRank());
                                         System.out.println("You win!!!");
-                                        ca += bet;
+                                        ca += bet ;
                                         w++;
+                                        info[0] = ca;
+                                        info[1] = w;
                                 }
                                 else if (u < m)
+                                {
+
+                                    System.out.println("Your hand: " + hand1);
+                                    System.out.print("You have a ");
+                                    hand1.displayRank(hand1.getRank());
+                                    System.out.println("Opponents hand: " + hand2);
+                                    System.out.print("Opponent has ");
+                                    hand2.displayRank(hand2.getRank());
+                                    System.out.println("You lost to the opponent");
+                                    ca -= bet;
+                                    lo++;
+                                    info[0] = ca;
+                                    info[2] = lo;
+                                }
+                               
+                                else
+                                {
+                                int kicker1,kicker2; //change name to rankValue
+                                kicker1 = (hand1.getKickerValue());
+                                kicker2 = (hand2.getKickerValue());
+                                
+
+                                if(kicker1 > kicker2)
+                                {
+
+                                        System.out.println("Your hand: " + hand1);
+                                        System.out.print("You have a ");
+                                        hand1.displayRank(hand1.getRank());
+                                        System.out.println("Opponents hand: " + hand2);
+                                        System.out.print("Opponent has a ");
+                                        hand2.displayRank(hand2.getRank());
+                                        System.out.println("You win!!!");
+                                        ca += bet ;
+                                        w++;
+                                        info[0] = ca;
+                                        info[1] = w;
+                                }
+                                else if (kicker1 < kicker2)
+                                {
+
+                                    System.out.println("Your hand: " + hand1);
+                                    System.out.print("You have a ");
+                                    hand1.displayRank(hand1.getRank());
+                                    System.out.println("Opponents hand: " + hand2);
+                                    System.out.print("Opponent has ");
+                                    hand2.displayRank(hand2.getRank());
+                                    System.out.println("You lost to the opponent");
+                                    ca -= bet;
+                                    lo++;
+                                    info[0] = ca;
+                                    info[2] = lo;
+                                }
+                               
+                                else
                                 {
                                     System.out.println("Your hand: " + hand1);
                                     System.out.print("You have a ");
@@ -354,18 +422,25 @@ public class Poker {
                                     System.out.println("Opponents hand: " + hand2);
                                     System.out.print("Opponent has a ");
                                     hand2.displayRank(hand2.getRank());
-                                    System.out.println("You lose to hand 2");
-                                    ca -= bet;
-                                    lo++;
+                                    
+                                    System.out.println("Hands are equal, No one wins.");
+                                    info[0] = ca;
+                                    info[1] = w;
+                                    info[2] = lo;
                                 }
-                                else
-                                {
-                                   //program crashes here, need to keep it going again. 
-                                    System.out.println("Tie As fuck");
-                                }
+                               
                             
                                 }
+                                
+                            }
+                         
+                            
                         }
-    }
+                        return info;
 }
+    
+}
+    
+    
+                        
 
