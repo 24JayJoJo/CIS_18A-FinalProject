@@ -11,24 +11,33 @@ import java.util.Comparator;
 public class Hand implements Comparable<Object> {
 	
 	
-    public String intValue ;
-    public String maxValue ;
+    public int intValue ;
+    public int maxValue ;
+    public int kickerValue ;
     public float checkR;
+	
     private ArrayList<Card> theCards = new ArrayList<>();
-	//
-        public String getIntValue()
+	
+	public int getIntValue()
         {
             return this.intValue;
         }
-        public void setIntValue(String n)
+        public void setIntValue(int n)
         {
             this.intValue = n;
         }
-        
+        public int getKickerValue()
+        {
+            return this.kickerValue;
+        }
+        public void setKickerValue(int n)
+        {
+            this.kickerValue = n;
+        }
+
 	public Hand(ArrayList<Card> theCards) {
 		this.theCards = theCards;
 	}
-        
 	// separates each card in a hand with spaces and a comma
 	public String toString() {
 		String s = "";
@@ -100,19 +109,23 @@ public class Hand implements Comparable<Object> {
         //should be used to check for pairs, three of kind, and 4 of kind          //could probably use this one by itself instead of previous method
 	private ArrayList<Integer> numberOfSameCards() {
 		ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
-		ArrayList<Card> tBreaker = new ArrayList<Card>();
+		
 		ArrayList<Integer> cardCounts = new ArrayList<Integer>();
 		int numbSame = 1;
-                intValue =sortedCards.get(0).getFace();
-                maxValue =sortedCards.get(4).getFace(); //ran out of time still need to use this in poker
+                intValue =sortedCards.get(4).getNumericalValue();
+                setIntValue(intValue);
+                kickerValue =sortedCards.get(1).getNumericalValue();
+                setKickerValue(kickerValue);
+                maxValue =sortedCards.get(4).getNumericalValue(); //ran out of time still need to use this in poker
+
 		for (int i = 0; i < sortedCards.size() - 1; ++i ) {
 			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) {
+                            
                             //used to compare secondary values
-                           
-                            intValue = sortedCards.get(0).getFace();
+                            intValue = sortedCards.get(i).getNumericalValue();
                             setIntValue(intValue);
-     
-				++numbSame;
+	
+                            ++numbSame;
 			} else {
 				for (int j = 0; j < numbSame; ++j) {
 					cardCounts.add(numbSame);
@@ -203,39 +216,89 @@ public class Hand implements Comparable<Object> {
         {
             if(x == 0)
             {
-                System.out.println("High Card");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                System.out.println("High Card, "+ sortedCards.get(4).getFace());
+                System.out.println("");
             }
             else if(x == 1)
             {
-                System.out.println("Pair");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                ArrayList<Card> sameFaceCards = this.getHandInNumericalOrder();
+                
+                for (int i = 0; i < sortedCards.size() - 1; ++i ) 
+                {
+			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) 
+                        {
+                              sameFaceCards.add(sortedCards.get(i));
+                        }     
+                } 
+                System.out.println("Pair of "+sameFaceCards.get(0).getFace() + "'s\n");
             }
             else if(x == 2)
             {
-                System.out.println("Two Pairs");
+                 ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                 ArrayList<Card> sameFaceCards = this.getHandInNumericalOrder();
+                for (int i = 0; i < sortedCards.size() - 1; ++i ) 
+                {
+			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) 
+                        {
+                            sameFaceCards.add(sortedCards.get(i));
+                        }
+                }        
+                 System.out.println("Pair of "+sortedCards.get(0).getFace() + "'s "
+                                     + "and " + sameFaceCards.get(1).getFace() + "'s\n");
             }
             else if(x == 3)
             {
-                System.out.println("Three of a kind");
+                 ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                for (int i = 0; i < sortedCards.size() - 1; ++i ) 
+                {
+			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) 
+                        {
+                            sortedCards.add(sortedCards.get(i));
+                        }
+                }
+                System.out.println("Three of a kind,  "+sortedCards.get(5).getFace() + "'s\n");
+                
             }
             else if(x == 4)
             {
-                System.out.println("Straight");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                System.out.println("Straight, Highest Card: " + sortedCards.get(4).getFace());
+                System.out.println("");
             }
             else if(x == 5)
             {
-                System.out.println("Flush");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                System.out.println("Flush, Highest Card: " + sortedCards.get(4).getFace());
+                System.out.println("");
+               
             }
             else if(x == 6)
             {
-                System.out.println("Full House");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                System.out.println("Full House of" + sortedCards.get(0).getFace() + "'s and " + sortedCards.get(4).getFace() + "'s\n");
             }
             else if(x == 7)
             {
-                System.out.println("Four of a kind");
+                
+                 ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                for (int i = 0; i < sortedCards.size() - 1; ++i ) 
+                {
+			if (sortedCards.get(i).isSameFace(sortedCards.get(i+1))) 
+                        {
+                             sortedCards.add(sortedCards.get(i));
+                        }
+                        
+                    System.out.println("four of a kind,  "+sortedCards.get(5).getFace() + "'s\n");
+                            
+                }
             }
             else
             {
-                System.out.println("Straight Flush");
+                ArrayList<Card> sortedCards = this.getHandInNumericalOrder();
+                System.out.println("Straight Flush, Highest Card: " + sortedCards.get(4).getFace());
+                System.out.println("");
             }
         }
 	
