@@ -18,13 +18,15 @@ import java.util.Scanner;
  *
  * @author Leodan
  */
-public class Poker {
+public class Poker 
+{
 
     /**
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, IOException 
+    {
         // TODO code application logic here
         char ans;
         double cash = 500;
@@ -145,17 +147,20 @@ public class Poker {
                 }
 
                 System.out.println("would you like to save the game?(Y/N)");
-                try {
-                        ans = keyboard.nextLine().substring(0, 1);
-                        while(! (ans.equalsIgnoreCase("Y") || ans.equalsIgnoreCase("N")))
-                        {
-                            System.out.print("Invalid Input 1. Try Again: ");
-                            ans = keyboard.nextLine().substring(0, 1);
-                        }
-                    } catch (Exception e) {
-                        System.out.print("Invalid Input 2. Try Again: ");
+                try 
+                {
+                    ans = keyboard.nextLine().substring(0, 1);
+                    while(! (ans.equalsIgnoreCase("Y") || ans.equalsIgnoreCase("N")))
+                    {
+                        System.out.print("Invalid Input 1. Try Again: ");
                         ans = keyboard.nextLine().substring(0, 1);
                     }
+                } 
+                catch (Exception e) 
+                {
+                        System.out.print("Invalid Input 2. Try Again: ");
+                        ans = keyboard.nextLine().substring(0, 1);
+                }
 
                 while(ans.equalsIgnoreCase("Y"))
                 {
@@ -209,7 +214,7 @@ public class Poker {
                     }
                     else
                     {
-                        System.out.println("You have 0 dollars now. YOUR BROKE. YOU LOSE!!!");
+                        System.out.println("You out of cash!Game Over Loser!");
                         System.exit(0);
                     }
                     System.out.println("would you like to try again?");
@@ -278,6 +283,9 @@ public class Poker {
         double bet = 0;
         double[] info = new double[3];
         Scanner keyboard = new Scanner(System.in);
+        info[0]= ca;
+        info[1]= w;
+        info[2]= lo;
         
         CardDeck d = CardDeck.getStandardDeck();
                         d.shuffle();
@@ -330,7 +338,7 @@ public class Poker {
                             System.out.println("Opponents hand: " + hand2);
                             System.out.print("Opponent has a ");
                             hand2.displayRank(hand2.getRank());
-                            System.out.println("You lose to hand 2");
+                            System.out.println("You lose to the opponent");
                             ca -= bet;
                             lo++;
                             info[0] = ca;
@@ -378,68 +386,25 @@ public class Poker {
                                
                                 else
                                 {
-                                int kicker1,kicker2; //change name to rankValue
-                                kicker1 = (hand1.getKickerValue());
-                                kicker2 = (hand2.getKickerValue());
                                 
-
-                                if(kicker1 > kicker2)
-                                {
-
-                                        System.out.println("Your hand: " + hand1);
-                                        System.out.print("You have a ");
-                                        hand1.displayRank(hand1.getRank());
-                                        System.out.println("Opponents hand: " + hand2);
-                                        System.out.print("Opponent has a ");
-                                        hand2.displayRank(hand2.getRank());
-                                        System.out.println("You win!!!");
-                                        ca += bet ;
-                                        w++;
-                                        info[0] = ca;
-                                        info[1] = w;
-                                }
-                                else if (kicker1 < kicker2)
-                                {
-
-                                    System.out.println("Your hand: " + hand1);
-                                    System.out.print("You have a ");
-                                    hand1.displayRank(hand1.getRank());
-                                    System.out.println("Opponents hand: " + hand2);
-                                    System.out.print("Opponent has ");
-                                    hand2.displayRank(hand2.getRank());
-                                    System.out.println("You lost to the opponent");
-                                    ca -= bet;
-                                    lo++;
-                                    info[0] = ca;
-                                    info[2] = lo;
-                                }
-                               
-                                else
-                                {
-                                    System.out.println("Your hand: " + hand1);
-                                    System.out.print("You have a ");
-                                    hand1.displayRank(hand1.getRank());
-                                    System.out.println("Opponents hand: " + hand2);
-                                    System.out.print("Opponent has a ");
-                                    hand2.displayRank(hand2.getRank());
                                     
                                     System.out.println("Hands are equal, No one wins.");
                                     info[0] = ca;
                                     info[1] = w;
                                     info[2] = lo;
                                 }
-                               
+                                
                             
                                 }
                                 
                             }
-                         
+                            return info;
                             
                         }
-                        return info;
+                        
 }
     
-}
+
     
     
                         
